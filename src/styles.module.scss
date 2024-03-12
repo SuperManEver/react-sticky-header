@@ -1,0 +1,56 @@
+.root {
+  background-color: pink;
+
+  &.withStickyHeader {
+    margin-top: 90px;
+  }
+}
+
+.header {
+  background-color: aqua;
+  height: 80px;
+
+  &.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    transition: all 0.5s ease;
+    animation: smoothScroll 1s forwards;
+  }
+}
+
+.section {
+  background-color: azure;
+  height: 150vh;
+}
+
+.aside {
+  background-color: bisque;
+  height: 80vh;
+}
+
+.footer {
+  background-color: cadetblue;
+  height: 90px;
+}
+
+@keyframes smoothScroll {
+  0% {
+    transform: translateY(-142px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.values {
+  min-width: 100px;
+
+  z-index: 20;
+  padding: 20px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  border: 1px solid gray;
+}
