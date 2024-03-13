@@ -47,7 +47,7 @@ function useStickyHeader(scrollDirection: 'up' | 'down' | null) {
 
       // it means we reached TOP but scrolling up
       if (scrollDirection === 'up') {
-        if (rect.top === 0 && getDistanceToTop() < 10) {
+        if (rect.top <= 0 && getDistanceToTop() <= 0) {
           setSticky(false);
         }
       }
@@ -83,6 +83,11 @@ function App() {
   return (
     <div className={rootCn}>
       <div className={valuesCn}>
+        <p>
+          HEADER RECT TOP:{' '}
+          {headerRef &&
+            Math.round(headerRef.current?.getBoundingClientRect().top || 0)}
+        </p>
         <p>window.scrollY: {window.scrollY}</p>
         <p>
           document.documentElement.scrollTop:{' '}
