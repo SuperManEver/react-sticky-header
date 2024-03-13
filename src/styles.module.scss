@@ -1,5 +1,10 @@
 .root {
   background-color: pink;
+  position: relative;
+
+  & > * {
+    margin-bottom: 10px;
+  }
 
   &.withStickyHeader {
     margin-top: 90px;
@@ -9,34 +14,65 @@
 .header {
   background-color: aqua;
   height: 80px;
+  width: 100%;
+  border: 1px solid red;
+  position: relative;
+
+  // &.stickyHeader {
+  //   position: fixed;
+  //   top: 0;
+  //   width: 100%;
+  // }
 
   &.sticky {
-    position: fixed;
+    position: sticky;
     top: 0;
-    width: 100%;
-    transition: all 0.5s ease;
-    animation: smoothScroll 1s forwards;
+  }
+
+  &.visible {
+    // transform: translateY(0);
+    top: 0;
+    transition: transform 0.45s ease-out;
+    // visibility: visible;
+  }
+
+  &.hidden {
+    // visibility: hidden;
+    top: -80px;
+    transition: transform 0.45s ease-out;
   }
 }
 
+.stickyHeader {
+  background-color: aqua;
+  height: 80px;
+  width: 100%;
+  border: 1px solid red;
+  position: sticky;
+  top: 0;
+}
+
 .section {
+  border: 1px solid red;
   background-color: azure;
   height: 150vh;
 }
 
 .aside {
+  border: 1px solid red;
   background-color: bisque;
   height: 80vh;
 }
 
 .footer {
+  border: 1px solid red;
   background-color: cadetblue;
   height: 90px;
 }
 
 @keyframes smoothScroll {
   0% {
-    transform: translateY(-142px);
+    transform: translateY(-80px);
   }
 
   100% {
@@ -50,7 +86,11 @@
   z-index: 20;
   padding: 20px;
   position: fixed;
-  top: 0;
+  bottom: 0;
   right: 0;
   border: 1px solid gray;
+
+  &.sticky {
+    background-color: crimson;
+  }
 }

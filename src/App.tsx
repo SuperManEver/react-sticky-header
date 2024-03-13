@@ -17,58 +17,68 @@ import css from './styles.module.scss';
  *
  */
 
-function App() {
-  const [sticky, setSticky] = useState({ isSticky: false, offset: 0 });
-  const headerRef = useRef<HTMLHtmlElement>(null);
-  const { scrollDirection, scrollY } = useScrollDirection();
+function useStickyHeader() {
+  const [headerStickyVisible, setHeaderVisibility] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
-  const handleScroll = (elTopOffset: number, elHeight: number) => {
-    const isBeyondViewport = window.scrollY > elTopOffset + elHeight;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const toggleSticky = () => {
+    if (window.scrollY > 80) {
+      setHeaderVisibility(true);
 
-    // TODO: this condinition should be different
-    // if (isBeyondViewport) {
-    //   setSticky({ isSticky: true, offset: elHeight });
-    // } else {
-    //   setSticky({ isSticky: false, offset: 0 });
-    // }
-
-    // console.log(scrollDirection, scrollY);
+      if (headerRef && headerRef.current) {
+        headerRef.current.style.display = 'none';
+      }
+    }
   };
 
   useEffect(() => {
-    const handleScrollEvent = () => {
-      if (!headerRef) {
-        return;
-      }
-
-      if (!headerRef.current) {
-        return;
-      }
-
-      const header = headerRef.current.getBoundingClientRect();
-
-      handleScroll(header.top, header.height);
-    };
-
-    window.addEventListener('scroll', handleScrollEvent);
+    window.addEventListener('scroll', toggleSticky);
 
     return () => {
-      window.removeEventListener('scroll', handleScrollEvent);
+      window.removeEventListener('scroll', toggleSticky);
     };
-  }, []);
+  }, [toggleSticky]);
 
-  const headerCn = cn(css.header, { [css.sticky]: sticky.isSticky });
-  const rootCn = cn(css.root, { [css.withStickyHeader]: sticky.isSticky });
+  return { headerRef, headerStickyVisible };
+}
+
+function App() {
+  const scrollDirection = useScrollDirection();
+  const { headerRef, headerStickyVisible } = useStickyHeader();
+
+  const belowThreshold = window.scrollY > 82;
+
+  const headerCn = cn(css.header, {
+    [css.sticky]: belowThreshold,
+    [css.visible]: scrollDirection === 'up' && belowThreshold,
+    [css.hidden]: scrollDirection === 'down' && belowThreshold,
+  });
+  const rootCn = cn(css.root);
+
+  // console.log('isSticky: ', isSticky);
+
+  const valuesCn = cn(css.values, { [css.sticky]: belowThreshold });
+
+  const stickyHeader = cn(css.stickyHeader);
 
   return (
     <div className={rootCn}>
-      <div className={css.values}>
+      <div className={valuesCn}>
         <p>{window.scrollY}</p>
+        <p>{scrollDirection}</p>
+        <p>{headerStickyVisible ? 'visible' : 'hidden'}</p>
       </div>
 
       <header ref={headerRef} className={headerCn}>
         HEADER
       </header>
+
+      {headerStickyVisible && (
+        <header className={stickyHeader}>STICKY HEADER</header>
+      )}
+
+      {/* {isSticky && <header className={css.stickyHeader}>HEADER</header>} */}
       <section className={css.section}>SECTION </section>
       <aside className={css.aside}>ASIDE</aside>
       <footer className={css.footer}>FOOTER</footer>
